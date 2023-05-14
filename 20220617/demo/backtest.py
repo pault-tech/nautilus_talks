@@ -3,13 +3,14 @@ from typing import Tuple
 
 from nautilus_trader.backtest.node import BacktestNode
 from nautilus_trader.config import (
-    CacheConfig,
     BacktestDataConfig,
     BacktestEngineConfig,
     BacktestRunConfig,
     BacktestVenueConfig,
+    CacheConfig,
     ImportableActorConfig,
     ImportableStrategyConfig,
+    LoggingConfig,
     RiskEngineConfig,
     StreamingConfig,
 )
@@ -57,12 +58,11 @@ def main(
     engine = BacktestEngineConfig(
         trader_id="BACKTESTER-001",
         cache=CacheConfig(tick_capacity=100_000),
-        bypass_logging=bypass_logging,
-        log_level=log_level,
         streaming=StreamingConfig(catalog_path=str(catalog.path)) if persistence else None,
         risk_engine=RiskEngineConfig(max_order_submit_rate="1000/00:00:01"),  # type: ignore
         strategies=[strategy],
         actors=[prediction],
+        logging=LoggingConfig(log_level=log_level, bypass_logging=bypass_logging)
     )
     venues = [
         BacktestVenueConfig(
